@@ -4,33 +4,17 @@ exports.getAllGames = async (req, res) => {
   try {
     const games = await Game.find();
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        games
-      }
-    });
+    res.status(200).json(games);
   } catch (e) {
-    res.status(404).json({
-      status: "fail",
-      message: e
-    });
+    res.status(404).json(e);
   }
 };
 
 exports.createGame = async (req, res) => {
   try {
     const game = await Game.create(req.body);
-    res.status(201).json({
-      status: "success",
-      data: {
-        game
-      }
-    });
+    res.status(201).json(game);
   } catch (e) {
-    res.status(400).json({
-      status: "fail",
-      message: e
-    });
+    res.status(400).json(e);
   }
 };
