@@ -8,6 +8,10 @@ exports.getAllGames = catchAsync(async (req, res, next) => {
 });
 
 exports.createGame = catchAsync(async (req, res, next) => {
-  const game = await Game.create(req.body);
-  res.status(201).json(game);
+  req.user.games.push(req.body);
+  const user = await req.user.save();
+
+  res.status(201).json({
+    user
+  });
 });
