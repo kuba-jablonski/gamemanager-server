@@ -18,7 +18,7 @@ exports.addToMyBacklog = catchAsync(async (req, res, next) => {
   const backlog = await Backlog.findOneAndUpdate(
     { owner: req.user._id, "items.apiId": { $ne: req.body.apiId } },
     { $push: { items: req.body } },
-    { new: true }
+    { new: true, runValidators: true }
   );
 
   if (!backlog) return next(new AppError("You already added this game.", 400));
