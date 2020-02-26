@@ -1,5 +1,19 @@
 const mongoose = require("mongoose");
 
+const holderSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    unique: true,
+    required: true
+  },
+  logType: {
+    type: String,
+    required: true,
+    enum: ["active", "backlog", "wishlist", "completed"]
+  }
+});
+
 const gameSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,11 +24,7 @@ const gameSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  logType: {
-    type: String,
-    required: true,
-    enum: ["active", "backlog", "wishlist", "completed"]
-  }
+  holders: [holderSchema]
 });
 
 const Game = mongoose.model("Game", gameSchema);

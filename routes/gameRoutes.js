@@ -5,9 +5,11 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 router.route("/").post(authController.protect, gameController.createGame);
-router
-  .route("/:gameId")
-  .patch(authController.protect, gameController.updateGame)
-  .delete(authController.protect, gameController.daleteGame);
+
+// router.route("/").post(authController.protect, gameController.createGame);
+// router
+//   .route("/:gameId")
+//   .patch(authController.protect, gameController.updateGame)
+//   .delete(authController.protect, gameController.daleteGame);
 
 module.exports = router;
