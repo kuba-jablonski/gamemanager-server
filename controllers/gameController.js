@@ -78,5 +78,18 @@ exports.createGame = catchAsync(async (req, res, next) => {
     }
   );
 
-  res.status(200).json({ game });
+  res.status(201).json({ game });
+});
+
+// exports.setUserIds = (req, res, next) => {
+//   if (!req.body.user) req.body.user = req.user.id;
+//   next();
+// };
+
+exports.getAllGames = catchAsync(async (req, res, next) => {
+  const filter = {};
+
+  const games = await Game.find(filter);
+
+  res.status(200).json({ games });
 });
