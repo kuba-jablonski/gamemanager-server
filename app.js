@@ -2,15 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
-const gameRouter = require("./routes/gameRoutes");
 const userRouter = require("./routes/userRoutes");
+const backlogRouter = require("./routes/backlogRoutes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/v1/games", gameRouter);
+app.use("/api/v1/backlog", backlogRouter);
 app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {

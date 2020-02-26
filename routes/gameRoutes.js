@@ -4,9 +4,10 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
+router.route("/").post(authController.protect, gameController.createGame);
 router
-  .route("/")
-  .get(gameController.getAllGames)
-  .post(authController.protect, gameController.createGame);
+  .route("/:gameId")
+  .patch(authController.protect, gameController.updateGame)
+  .delete(authController.protect, gameController.daleteGame);
 
 module.exports = router;
