@@ -50,5 +50,19 @@ exports.updateGame = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteGame = catchAsync(async (req, res, next) => {
-  // TODO
+  const game = await Game.findOneAndUpdate(
+    { _id: req.params.gameId, "holders.user": req.body.user },
+    {
+      $pull: {
+        holders: {
+          user: req.body.user
+        }
+      }
+    },
+    { new: true, runValidators: true }
+  );
+
+  if (!game) return next(new AppError("Game not found", 404));
+
+  res.status(204).json({ game: null });
 });
