@@ -9,6 +9,11 @@ router
   .get(gameController.getAllGames)
   .post(authController.protect, gameController.createGame);
 
+router
+  .route("/:gameId")
+  .patch(authController.protect, gameController.updateGame)
+  .delete(authController.protect, gameController.deleteGame);
+
 // router.route("/").post(authController.protect, gameController.createGame);
 // router
 //   .route("/:gameId")
