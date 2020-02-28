@@ -20,22 +20,15 @@ exports.createGame = catchAsync(async (req, res, next) => {
   res.status(201).json({ game });
 });
 
-// exports.setUserIds = (req, res, next) => {
-//   if (!req.body.user) req.body.user = req.user.id;
-//   next();
-// };
-
 exports.getAllGames = catchAsync(async (req, res, next) => {
-  const filter = {};
-
-  const games = await Game.find(filter);
+  const games = await Game.find({ "holders.user": req.user.id });
 
   res.status(200).json({ games });
 });
 
 exports.updateGame = catchAsync(async (req, res, next) => {
   const game = await Game.findOneAndUpdate(
-    { _id: req.params.gameId, "holders.user": req.body.user },
+    { _id: req.params.gameId, "holders.user": req.user.id },
     {
       $set: {
         "holders.$.logType": req.body.logType
@@ -51,11 +44,11 @@ exports.updateGame = catchAsync(async (req, res, next) => {
 
 exports.deleteGame = catchAsync(async (req, res, next) => {
   const game = await Game.findOneAndUpdate(
-    { _id: req.params.gameId, "holders.user": req.body.user },
+    { _id: req.params.gameId, "holders.user": req.user.id },
     {
       $pull: {
         holders: {
-          user: req.body.user
+          user: req.user.id
         }
       }
     },
