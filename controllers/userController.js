@@ -8,3 +8,9 @@ exports.getAllUsers = catchAsync(async (req, res) => {
   // SEND RESPONSE
   res.status(200).json({ users });
 });
+
+exports.getMe = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).populate("games");
+
+  res.status(200).json({ user });
+});
