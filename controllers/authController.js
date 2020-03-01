@@ -17,12 +17,14 @@ const signToken = id => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
+  let newUser = await User.create({
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm
   });
+
+  newUser = await newUser.populate("games").execPopulate();
 
   const token = signToken(newUser._id);
 
@@ -36,7 +38,9 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide email and password", 400));
   }
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email })
+    .select("+password")
+    .populate("games");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
@@ -45,7 +49,8 @@ exports.login = catchAsync(async (req, res, next) => {
   const token = signToken(user._id);
 
   res.status(200).json({
-    token
+    token,
+    user
   });
 });
 
