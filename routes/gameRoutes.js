@@ -8,7 +8,7 @@ router.use(authController.protect);
 
 router
   .route("/")
-  .get(gameController.getAllGames)
+  .get(gameController.getGames)
   .post(gameController.createGame);
 
 router

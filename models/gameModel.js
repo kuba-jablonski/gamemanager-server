@@ -1,31 +1,21 @@
 const mongoose = require("mongoose");
 
 const gameSchema = new mongoose.Schema({
-  name: {
+  title: {
     type: String,
-    required: true
+    required: [true, "Game must have a title."]
   },
   apiId: {
     type: Number,
-    unique: true,
-    required: true
+    required: [true, "Game must have an API ID."]
   },
-  holders: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        unique: true,
-        required: true
-      },
-      logType: {
-        type: String,
-        required: true,
-        enum: ["active", "backlog", "wishlist", "completed"]
-      }
-    }
-  ]
+  user: {
+    type: mongoose.Schema.ObjectId,
+    required: [true, "Game must belong to a user."]
+  }
 });
+
+gameSchema.index({ apiId: 1, user: 1 }, { unique: true });
 
 const Game = mongoose.model("Game", gameSchema);
 
