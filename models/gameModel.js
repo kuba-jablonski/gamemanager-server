@@ -12,6 +12,14 @@ const gameSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     required: [true, "Game must belong to a user."]
+  },
+  status: {
+    type: String,
+    required: [true, "Game must have a status."],
+    enum: {
+      values: ["active", "wishlist", "backlog", "completed"],
+      message: "Status is either: active, wishlist, backlog, or completed."
+    }
   }
 });
 
