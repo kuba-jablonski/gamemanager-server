@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const AppError = require("../utils/appError");
 
 const gameSchema = new mongoose.Schema({
   title: {
@@ -24,6 +25,14 @@ const gameSchema = new mongoose.Schema({
 });
 
 gameSchema.index({ apiId: 1, user: 1 }, { unique: true });
+
+gameSchema.post("save", function(error, doc, next) {
+  if (error.name === "MongoError" && error.code === 11000) {
+    next(new AppError("Game already in log.", 400));
+  } else {
+    next(error);
+  }
+});
 
 const Game = mongoose.model("Game", gameSchema);
 
