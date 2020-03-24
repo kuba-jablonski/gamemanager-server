@@ -71,22 +71,40 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) {
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
     return next(
       new AppError(
-        "The user belonging to this token does no longer exists.",
+        "The user belonging to this token does no longer exist.",
         401
       )
     );
   }
 
-  // if (freshUser.changedPasswordAfter(decoded.iat)) {
-  //   return next(
-  //     new AppError('User recently changed password! Please log in again.', 401)
-  //   );
-  // }
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError("User recently changed password! Please log in again.", 401)
+    );
+  }
 
-  req.user = freshUser;
+  req.user = currentUser;
   next();
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("Your current password is wrong.", 401));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    token
+  });
 });
