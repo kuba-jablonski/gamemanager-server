@@ -153,7 +153,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     passwordResetExpires: {
       $gt: Date.now()
     }
-  });
+  }).populate("games");
 
   if (!user) {
     return next(new AppError("Token is invalid or has expired", 400));
@@ -168,6 +168,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const token = signToken(user._id);
 
   res.status(200).json({
-    token
+    token,
+    user
   });
 });
