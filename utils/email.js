@@ -1,23 +1,53 @@
+const pug = require("pug");
 const nodemailer = require("nodemailer");
+const htmlToText = require("html-to-text");
 
-const sendEmail = async options => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD
+module.exports = class Email {
+  constructor(user, url) {
+    this.to = user.email;
+    this.username = user.username;
+    this.url = url;
+    this.from = "Jakub Jabłoński <kuba.jablonski.zg@gmail.com>";
+  }
+
+  newTransport() {
+    if (process.env.NODE_ENV === "production") {
+      // sendgrid
+      return 1;
     }
-  });
 
-  const mailOptions = {
-    from: "Jakub Jabłoński <kuba.jablonski.zg@gmail.com>",
-    to: options.email,
-    subject: options.subject,
-    text: options.message
-  };
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+  }
 
-  await transporter.sendMail(mailOptions);
+  async send(template, subject) {
+    const html = pug.renderFile(`${__dirname}/../email/${template}.pug`, {
+      username: this.username,
+      url: this.url,
+      subject
+    });
+
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html,
+      text: htmlToText.fromString(html)
+    };
+
+    await this.newTransport().sendMail(mailOptions);
+  }
+
+  async sendPasswordReset() {
+    await this.send(
+      "passwordReset",
+      "Your password reset token (valid for 10 minutes)"
+    );
+  }
 };
-
-module.exports = sendEmail;
