@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const compression = require("compression");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
@@ -10,6 +11,7 @@ const app = express();
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
+app.use(compression());
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/games", gameRouter);
