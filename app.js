@@ -8,9 +8,9 @@ const gameRouter = require("./routes/gameRoutes");
 
 const app = express();
 
-app.use(cors());
-app.options("*", cors());
-// app.all("*", cors({ allowedHeaders: ["Content-Type", "Authorization"] }));
+// app.use(cors());
+// app.options("*", cors());
+app.all("*", cors({ allowedHeaders: ["Content-Type", "Authorization"] }));
 app.use(express.json());
 app.use(compression());
 
