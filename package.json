@@ -38,7 +38,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.8.9",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "pug": "^2.0.4",
     "validator": "^12.2.0",
     "xss-clean": "^0.1.1"
