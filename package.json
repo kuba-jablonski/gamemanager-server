@@ -40,7 +40,7 @@
     "mongoose": "^5.8.9",
     "nodemailer": "^6.4.6",
     "pug": "^2.0.4",
-    "validator": "^12.2.0",
+    "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
   }
 }
